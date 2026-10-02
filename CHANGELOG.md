@@ -7,13 +7,23 @@ upstream follows [Semantic Versioning](https://semver.org/). This fork uses
 
 ## [Unreleased]
 
-### Added
-- Simplified Chinese UI catalog, including the phone icon and poll intervals, with exact Windows UI language detection and persisted manual selection.
+## [1.13.0.3] - 2026-10-03
 
-### Changed
-- Adopt upstream #162 / PR #188 localization: stable message keys, explicit language arguments, separate static catalogs and plural rules.
-- Preserve Traditional Chinese and Japanese catalogs, phone icon, ASUS 1C5A support and fork versioning; add the upstream French catalog.
-- Keep diagnostics and technical output in English, localize queued notifications when delivered, and handle Unicode rename prompts and tooltip limits.
+Halo Battery 1.13.0.3 — miguotw 分支版
+
+### 新增與變更
+- 新增簡體中文與法文，語言選單提供 English、繁體中文、简体中文、日本語及 Français。
+- 採用上游 Issue #162 / PR #188 的多語言架構：固定訊息識別碼、獨立語系目錄、明確語言參數及複數規則。
+- 首次啟動依 Windows 介面語言選擇；繁中與簡中分別識別，不支援時使用 English，保留已儲存的手動選擇。
+- 延後顯示的通知依顯示當下的語言翻譯；診斷報告、紀錄及狀態檔維持英文。
+- 改善重新命名視窗的 Unicode 文字處理及電量提示的 UTF-16 長度限制。
+- 保留手機圖示、ASUS 1C5A 接收器支援與分支版本設定。
+
+### 驗證與使用
+- 507 項自動化測試通過，涵蓋五種語言、設定保存、系統語言偵測及既有功能。
+- 繁中、簡中與日文選單已完成畫面檢查。
+- 下載並解壓縮 `HaloBattery-1.13.0.3.zip`，執行其中的 `HaloBattery.exe`。
+- 更新前先結束舊版程式，保留完整的 HaloBattery 資料夾（包含 `_internal`）。
 
 ## [1.13.0.2] - 2026-10-03
 

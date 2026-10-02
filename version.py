@@ -4,5 +4,5 @@ After merging an upstream release, update UPSTREAM_VERSION and reset FORK_REVISI
 Increment FORK_REVISION for subsequent releases based on the same upstream version.
 """
 UPSTREAM_VERSION = "1.13.0"
-FORK_REVISION = 2
+FORK_REVISION = 3
 VERSION = f"{UPSTREAM_VERSION}.{FORK_REVISION}"
