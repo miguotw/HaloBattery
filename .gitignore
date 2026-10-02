@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+.test-deps/
 venv/
 
 # PyInstaller (build_exe.bat)

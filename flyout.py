@@ -64,7 +64,7 @@ FADE_MS = 120
 SUBMENU_DELAY_MS = 200               # hover this long to open / switch a submenu
 POLL_MS = 30                         # outside clicks and focus, while the menu is open
 
-TEXT_FONTS = ("Segoe UI Variable Text", "Segoe UI")
+TEXT_FONTS = ("Microsoft JhengHei UI", "Microsoft JhengHei", "Segoe UI Variable Text", "Segoe UI")
 TEXT_PX = 13
 ICON_FONTS = ("Segoe Fluent Icons", "Segoe MDL2 Assets")
 CHECK, CHEVRON, MINUS, PLUS, EDIT = "\uE73E", "\uE76C", "\uE738", "\uE710", "\uE70F"
