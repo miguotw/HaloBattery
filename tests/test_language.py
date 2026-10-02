@@ -13,16 +13,17 @@ class LanguageTests(unittest.TestCase):
         i18n.set_language("zh-TW")
         self.addCleanup(i18n.set_language, "zh-TW")
 
-    def test_both_menus_and_notifications(self):
+    def test_all_language_menus_and_notifications(self):
         for language, preferences, refresh in (("en", "Preferences", "Refresh now"),
-                                               ("zh-TW", "偏好設定", "立即更新")):
+                                               ("zh-TW", "偏好設定", "立即更新"),
+                                               ("ja", "設定", "今すぐ取得")):
             with self.subTest(language=language):
                 app = make_app({"language": language})
                 menu = app.build_menu(None)
                 self.assertIn(refresh, [item.text for item in menu.items])
                 prefs = next(item.submenu for item in menu.items if item.text == preferences)
                 options = prefs.items[0].submenu.items
-                self.assertEqual([item.text for item in options], ["English", "繁體中文"])
+                self.assertEqual([item.text for item in options], ["English", "繁體中文", "日本語"])
                 self.assertEqual([item.text for item in options if item.checked],
                                  [dict(i18n.LANGUAGES)[language]])
         i18n.set_language("en")
@@ -34,6 +35,23 @@ class LanguageTests(unittest.TestCase):
         state = dev()
         state.approx = "about 50% (medium), charging"
         self.assertEqual(hb.device_state(state), state.approx)
+
+    def test_japanese_notifications_and_status(self):
+        i18n.set_language("ja")
+        self.assertEqual(hb.low_battery_text("Mouse", 15, False),
+                         "Mouse: バッテリー残量 15%。充電してください。")
+        self.assertEqual(hb.fully_charged_text("Mouse"), "Mouse の充電が完了しました。")
+        self.assertIn("v1.2.3 をダウンロード…", hb.update_text("1.2.3"))
+        self.assertEqual(hb.history.format_left(18000), "あと約 5 時間使用できます")
+        state = dev()
+        state.approx = "about 50% (medium), charging"
+        self.assertEqual(hb.device_state(state), "約 50% (中程度)、充電中")
+        self.assertEqual(set(i18n.ENGLISH), set(i18n.JAPANESE))
+        import string
+        for key, translated in i18n.JAPANESE.items():
+            fields = lambda text: {field for _, field, _, _ in string.Formatter().parse(text)
+                                   if field is not None}
+            self.assertEqual(fields(key), fields(translated), key)
 
     def test_select_language_saves_and_rebuilds_menu_and_tooltip(self):
         app = make_app()
@@ -55,10 +73,10 @@ class LanguageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = os.path.join(directory, "config.json")
             with mock.patch.object(hb, "CONFIG_PATH", path):
-                for language in ("en", "zh-TW", "invalid", None, 42):
+                for language in ("en", "zh-TW", "ja", "invalid", None, 42):
                     with open(path, "w", encoding="utf-8") as file:
                         json.dump({"language": language}, file)
-                    expected = language if language in ("en", "zh-TW") else i18n.DEFAULT_LANGUAGE
+                    expected = language if language in ("en", "zh-TW", "ja") else i18n.DEFAULT_LANGUAGE
                     self.assertEqual(hb.load_config()["language"], expected)
                 cfg = dict(hb.DEFAULTS, language="en")
                 hb.save_config(cfg)

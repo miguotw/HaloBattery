@@ -732,7 +732,7 @@ def localized_state(text: str) -> str:
         ("about ", tr('約 ')),
     ):
         text = text.replace(source, translated)
-    return text.replace(", ", "，")
+    return text.replace(", ", tr("，"))
 
 
 def device_state(st: DeviceStatus, left: str = "") -> str:
