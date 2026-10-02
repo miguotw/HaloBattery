@@ -120,7 +120,7 @@ Right-click a device icon to open its menu. It looks like a Windows 11 menu (acr
 - **Hide this device**: remove its icon, for example for a controller that always reports 100%.
 - **Refresh now**
 - **Preferences**:
-  - **Language**: choose **English**, **繁體中文** or **日本語**. Menus, tooltips and notifications change immediately, and the choice is saved for the next launch. The default is Traditional Chinese.
+  - **Language**: choose **English**, **繁體中文** or **日本語**. Menus, tooltips and notifications change immediately, and the choice is saved for the next launch. On first launch, the Windows user interface language determines the selection; unsupported languages or detection failures use English. A saved manual choice takes priority.
   - **Poll interval** (15 s to 5 min) and **Low battery alert** (off, 10–30%): change them with the − and + buttons or the mouse wheel, the menu stays open
   - **Alert when fully charged** (a notification once per charge, on by default)
   - **Estimated time left**: "about 5 h of use left" in the tooltip, from how fast the device has drained since its last charge. Only time the device is awake and on battery counts, and there is no estimate until it has been used for 30 minutes and dropped 3%. The history is kept in `%APPDATA%\HaloBattery\history.json`.

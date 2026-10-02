@@ -212,6 +212,7 @@ def load_config() -> dict:
     single wrong value (a string for the poll interval, an interval of 0) falls
     back to its default instead of breaking the app."""
     cfg = dict(DEFAULTS)
+    cfg["language"] = i18n.detect_system_language()
     try:
         with open(CONFIG_PATH, encoding="utf-8") as f:
             data = json.load(f)

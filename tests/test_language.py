@@ -12,6 +12,9 @@ class LanguageTests(unittest.TestCase):
     def setUp(self):
         i18n.set_language("zh-TW")
         self.addCleanup(i18n.set_language, "zh-TW")
+        detector = mock.patch.object(i18n, "detect_system_language", return_value="en")
+        detector.start()
+        self.addCleanup(detector.stop)
 
     def test_all_language_menus_and_notifications(self):
         for language, preferences, refresh in (("en", "Preferences", "Refresh now"),
@@ -92,3 +95,39 @@ class LanguageTests(unittest.TestCase):
                     arg = node.args[0]
                     if isinstance(arg, ast.Constant) and any("\u4e00" <= char <= "\u9fff" for char in arg.value):
                         self.assertIn(arg.value, i18n.ENGLISH)
+
+
+class SystemLanguageTests(unittest.TestCase):
+    def test_windows_language_mapping(self):
+        for code, expected in ((0x0404, "zh-TW"), (0x0C04, "zh-TW"),
+                               (0x1404, "zh-TW"), (0x7C04, "zh-TW"),
+                               (0x0411, "ja"), (0x0409, "en"), (0x0809, "en"),
+                               (0x0804, "en"), (0x0407, "en"), (0, "en")):
+            with self.subTest(code=code):
+                self.assertEqual(i18n.language_for_windows_id(code), expected)
+
+    def test_windows_ui_api_and_failure_fallback(self):
+        import ctypes
+        import sys
+        fake = mock.Mock(return_value=0x0411)
+        with mock.patch.object(sys, "platform", "win32"), \
+             mock.patch.object(ctypes, "windll", create=True) as api:
+            api.kernel32.GetUserDefaultUILanguage = fake
+            self.assertEqual(i18n.detect_system_language(), "ja")
+            fake.side_effect = OSError("unavailable")
+            self.assertEqual(i18n.detect_system_language(), "en")
+        with mock.patch.object(sys, "platform", "linux"):
+            self.assertEqual(i18n.detect_system_language(), "en")
+
+    def test_system_default_and_explicit_choice(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "config.json")
+            with mock.patch.object(hb, "CONFIG_PATH", path), \
+                 mock.patch.object(i18n, "detect_system_language", return_value="ja"):
+                self.assertEqual(hb.load_config()["language"], "ja")
+                for data, expected in (({}, "ja"), ({"language": "invalid"}, "ja"),
+                                       ({"language": "zh-TW"}, "zh-TW"),
+                                       ({"language": "en"}, "en")):
+                    with open(path, "w", encoding="utf-8") as file:
+                        json.dump(data, file)
+                    self.assertEqual(hb.load_config()["language"], expected)

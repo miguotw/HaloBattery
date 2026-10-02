@@ -7,6 +7,24 @@ upstream follows [Semantic Versioning](https://semver.org/). This fork uses
 
 ## [Unreleased]
 
+## [1.13.0.2] - 2026-10-03
+
+Halo Battery 1.13.0.2 — miguotw 分支版
+
+### 上游基礎
+- 維持上游 Halo Battery 1.13.0；本版為第二個分支修訂版。
+
+### 新增與變更
+- 新增日本語介面，涵蓋選單、電量提示、通知與重新命名視窗。語言選單提供 English、繁體中文及日本語。
+- 未設定語言時，依 Windows 使用者介面語言自動選擇；不支援的語言或讀取失敗時使用 English。
+- 已儲存的手動語言選擇優先保留，更新不會覆蓋既有選擇。
+- 以繁體中文 README 為主要文件，提供英文版與雙向語言切換連結。
+
+### 驗證與使用
+- 472 項自動化測試通過，包含三種語言、系統語言偵測、英文備援與設定保存。
+- 下載並解壓縮 `HaloBattery-1.13.0.2.zip`，執行其中的 `HaloBattery.exe`。
+- 更新前先結束舊版程式，並保留完整的 HaloBattery 資料夾（包含 `_internal`）。
+
 ## [1.13.0.1] - 2026-10-03
 
 Halo Battery 1.13.0.1 — miguotw 分支版

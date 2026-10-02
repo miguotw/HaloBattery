@@ -105,6 +105,9 @@ class TrayIconTests(unittest.TestCase):
 
 class ConfigTests(unittest.TestCase):
     def setUp(self):
+        detector = mock.patch.object(hb.i18n, "detect_system_language", return_value=hb.DEFAULTS["language"])
+        detector.start()
+        self.addCleanup(detector.stop)
         self.dir = tempfile.mkdtemp(prefix="halo_cfg_")
         self.path = os.path.join(self.dir, "config.json")
         p = mock.patch.object(hb, "CONFIG_PATH", self.path)

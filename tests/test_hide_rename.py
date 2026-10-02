@@ -83,7 +83,8 @@ class FakeTrayIcon:
 def make_app(cfg=None):
     """An App with only the parts that hide / rename / apply use."""
     app = hb.App.__new__(hb.App)
-    app.cfg = dict(hb.DEFAULTS, **(cfg or {}))
+    app.cfg = dict(hb.DEFAULTS, **dict({"language": "zh-TW"}, **(cfg or {})))
+    hb.i18n.set_language(app.cfg["language"])
     app.lock = threading.RLock()
     app.icons, app.missing, app.alerted, app.full_state = {}, {}, {}, {}
     app.placeholder = None

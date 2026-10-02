@@ -1,7 +1,31 @@
 """User interface translations for English, Traditional Chinese and Japanese."""
 LANGUAGES = (("en", "English"), ("zh-TW", "繁體中文"), ("ja", "日本語"))
-DEFAULT_LANGUAGE = "zh-TW"
+DEFAULT_LANGUAGE = "en"
 _language = DEFAULT_LANGUAGE
+
+
+def language_for_windows_id(language_id):
+    """Map a Windows UI LANGID to a supported translation."""
+    if language_id in (0x0404, 0x0C04, 0x1404, 0x7C04):
+        return "zh-TW"  # Traditional Chinese: Taiwan, Hong Kong, Macao, neutral
+    if language_id & 0x03FF == 0x0011:
+        return "ja"
+    return "en"  # English variants, unsupported languages and unknown IDs
+
+
+def detect_system_language():
+    """Use the Windows display language, not the regional formatting locale."""
+    import sys
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            get_language = ctypes.windll.kernel32.GetUserDefaultUILanguage
+            get_language.argtypes = []
+            get_language.restype = ctypes.c_ushort
+            return language_for_windows_id(get_language())
+        except (AttributeError, OSError, ValueError):
+            pass
+    return DEFAULT_LANGUAGE
 
 
 def set_language(language):
