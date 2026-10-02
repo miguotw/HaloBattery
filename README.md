@@ -1,5 +1,9 @@
 # Halo Battery
 
+This is the miguotw fork. Release versions use `upstream major.minor.patch.fork revision`
+(e.g. `1.13.0.1`); the base and revision are maintained in `version.py`.
+Update checks use this fork’s Releases.
+
 Battery levels for wireless mice, keyboards, headsets and controllers in the Windows system tray - one icon per device, no vendor software.
 
 ![All icon states](docs/icons.png)

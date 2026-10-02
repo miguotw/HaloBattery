@@ -2,9 +2,30 @@
 
 All notable changes to Halo Battery are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and the project follows [Semantic Versioning](https://semver.org/).
+upstream follows [Semantic Versioning](https://semver.org/). This fork uses
+`upstream major.minor.patch` plus a fourth numeric fork revision.
 
 ## [Unreleased]
+
+## [1.13.0.1] - 2026-10-03
+
+Halo Battery 1.13.0.1 — miguotw 分支版
+
+### 上游基礎
+- 基於上游 Halo Battery 1.13.0，保留既有裝置支援與系統匣功能。
+- 版本格式為「上游版本＋分支修訂號」；本版為此分支的第一版。
+
+### 本分支新增與修正
+- 在偏好設定加入語言選項，提供 English 與繁體中文；切換立即生效，並儲存選擇。
+- 繁體中文涵蓋選單、電量提示、重新命名視窗與通知，並提供中文字型支援。
+- 新增 iPhone 外觀的手機圖示，加粗外框以改善工作列小尺寸辨識度。
+- 支援 ASUS TX Gaming Mouse Mini Miku 的 2.4 GHz 接收器 `0B05:1C5A`，已於實機確認可讀取電量。
+- 更新檢查改為此分支的 GitHub Releases。
+
+### 驗證與使用
+- 468 項自動化測試通過；ASUS 滑鼠已完成實機電量讀取驗證。
+- 下載並解壓縮 `HaloBattery-1.13.0.1.zip`，執行其中的 `HaloBattery.exe`。
+- 請保留整個 HaloBattery 資料夾（包含 `_internal`），更新前先結束舊版程式。
 
 ## [1.13.0] - 2026-09-29
 

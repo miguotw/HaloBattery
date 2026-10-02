@@ -36,10 +36,10 @@ jobs:
         shell: pwsh
         run: |
           $tag = "${{ github.ref_name }}".TrimStart("v")
-          $m = Select-String -Path halo_battery.pyw -Pattern '^VERSION = "(.+)"'
-          $ver = $m.Matches[0].Groups[1].Value
+          $ver = python -c "from version import VERSION; print(VERSION)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           if ($ver -ne $tag) {
-            Write-Error "Tag v$tag does not match VERSION = `"$ver`" in halo_battery.pyw"
+            Write-Error "Tag v$tag does not match VERSION = `"$ver`" in version.py"
             exit 1
           }
           Write-Host "Version $ver"
@@ -61,8 +61,8 @@ jobs:
         id: zip
         shell: pwsh
         run: |
-          $m = Select-String -Path halo_battery.pyw -Pattern '^VERSION = "(.+)"'
-          $ver = $m.Matches[0].Groups[1].Value
+          $ver = python -c "from version import VERSION; print(VERSION)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $zip = "HaloBattery-$ver.zip"
           Compress-Archive -Path dist/HaloBattery -DestinationPath $zip
           "zip=$zip" >> $env:GITHUB_OUTPUT
@@ -83,6 +83,7 @@ jobs:
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v3
         with:
+          name: Halo Battery ${{ github.ref_name }} — miguotw 分支版
           files: ${{ steps.zip.outputs.zip }}
           fail_on_unmatched_files: true
           body_path: release_notes.md

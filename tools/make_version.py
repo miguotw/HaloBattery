@@ -7,7 +7,6 @@ in the file's Properties > Details tab; an .exe without them looks more
 suspicious to antivirus heuristics.
 """
 import os
-import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,11 +43,9 @@ VSVersionInfo(
 
 
 def version() -> str:
-    with open(os.path.join(ROOT, "halo_battery.pyw"), encoding="utf-8") as f:
-        m = re.search(r'^VERSION = "([0-9.]+)"', f.read(), re.M)
-    if not m:
-        raise SystemExit("VERSION not found in halo_battery.pyw")
-    return m.group(1)
+    sys.path.insert(0, ROOT)
+    from version import VERSION
+    return VERSION
 
 
 def main() -> int:
