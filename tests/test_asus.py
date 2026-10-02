@@ -136,6 +136,15 @@ class ParseTest(unittest.TestCase):
 
 
 class PollTest(ProviderTest):
+    def test_tx_mini_miku_receiver_1c5a(self):
+        # Captured on the 2.4 GHz receiver: battery byte 0x2e = 46%, not charging.
+        captured = [0x12, 0x07, 0, 0, 0x2e, 0x02, 0x14, 0xd7, 0x0e, 0, 0, 1]
+        self.assertEqual(A.parse_reply(captured, A.PERCENT), (46, False, ""))
+        entries = issue_81_entries(0x1C5A)
+        res = self.poll(entries, {b"if0-ff01": FakeMouse(level=46)})
+        self.assertEqual([(r.name, r.level, r.charging) for r in res],
+                         [("ASUS TX Gaming Mouse Mini Miku", 46, False)])
+
     def test_gladius_iii_aimpoint_issue_81(self):
         mouse = FakeMouse(level=87)
         res = self.poll(issue_81_entries(), {b"if0-ff01": mouse})
