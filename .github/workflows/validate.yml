@@ -1,0 +1,61 @@
+name: Validate Windows build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Exact candidate commit to validate
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt pyinstaller
+      - name: Run all tests with isolated settings
+        shell: pwsh
+        run: |
+          $env:APPDATA = Join-Path $env:RUNNER_TEMP 'HaloBattery-validation'
+          $env:PYTHONIOENCODING = 'utf-8'
+          python -m unittest discover -s tests
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Smoke test
+        shell: pwsh
+        run: |
+          $env:APPDATA = Join-Path $env:RUNNER_TEMP 'HaloBattery-probe'
+          python halo_battery.pyw --probe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build Windows application
+        shell: pwsh
+        run: |
+          python tools/make_icon.py halo.ico
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/make_version.py version_info.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m PyInstaller --noconfirm --onedir --windowed --noupx --name HaloBattery --icon halo.ico --version-file version_info.txt --hidden-import hid --hidden-import pystray._win32 halo_battery.pyw
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload validation build
+        uses: actions/upload-artifact@v7
+        with:
+          name: HaloBattery-validation-${{ github.run_id }}
+          path: dist/HaloBattery
+          if-no-files-found: error
+          retention-days: 7

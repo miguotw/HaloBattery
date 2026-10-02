@@ -144,6 +144,10 @@ Right-click a device icon to open its menu. It looks like a Windows 11 menu (acr
 
 Settings, the log and the diagnostics report live in `%APPDATA%\HaloBattery`.
 
+## Upstream synchronization
+
+A daily workflow proposes upstream updates in a PR and validates the candidate with full tests and a Windows build. Merging and releasing remain manual. See the [maintenance guide](docs/upstream-sync.md).
+
 ## Credits
 
 - WLmouse protocol: @len0c ([incconutwo/mouse-battery-tray](https://github.com/incconutwo/mouse-battery-tray), MIT).

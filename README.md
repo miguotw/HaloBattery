@@ -150,6 +150,10 @@
 
 設定、執行紀錄與診斷報告位於 `%APPDATA%HaloBattery`。
 
+## 同步上游
+
+每天約台灣時間 09:17 檢查上游，建立或更新同步 PR，執行完整測試與 Windows 建置；合併由人工確認，版本發布另行處理。[維護說明](docs/upstream-sync.md)。
+
 ## 致謝
 
 - WLmouse 協定：@len0c（[incconutwo/mouse-battery-tray](https://github.com/incconutwo/mouse-battery-tray)，MIT）。

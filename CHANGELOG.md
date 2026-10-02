@@ -7,6 +7,10 @@ upstream follows [Semantic Versioning](https://semver.org/). This fork uses
 
 ## [Unreleased]
 
+### Added
+- Daily upstream synchronization PRs with preserved merge history, conflict reporting and manual merge.
+- Windows unit-test, probe and PyInstaller validation for sync candidates, PRs and main pushes.
+
 ## [1.13.0.3] - 2026-10-03
 
 Halo Battery 1.13.0.3 — miguotw 分支版

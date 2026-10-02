@@ -1,0 +1,94 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: '17 1 * * *' # 09:17 Asia/Taipei; GitHub may delay scheduled runs.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.repository == 'miguotw/HaloBattery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      changed: ${{ steps.merge.outputs.changed }}
+      sha: ${{ steps.merge.outputs.sha }}
+      pr: ${{ steps.pr.outputs.url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Prepare upstream merge
+        id: merge
+        run: python tools/sync_upstream.py
+      - name: Push synchronization branch
+        if: steps.merge.outputs.changed == 'true'
+        # Normal push only: preserves manual resolutions and rejects concurrent edits.
+        run: git push origin HEAD:refs/heads/codex/sync-upstream
+      - name: Create or update synchronization PR
+        id: pr
+        if: steps.merge.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CANDIDATE_SHA: ${{ steps.merge.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/sync-pr.md" <<EOF
+          Merge the latest HeyOkay/HaloBattery main into this fork while retaining merge history and fork changes.
+
+          Candidate commit: \`$CANDIDATE_SHA\`.
+          Full unit tests, a smoke probe and a Windows PyInstaller build run in [this synchronization workflow]($RUN_URL), even when bot-created PR checks need approval.
+
+          Review the diff and the workflow result before merging. This workflow does not approve or merge the PR, change the fork version, create tags or publish a release.
+          Manual conflict resolutions on \`codex/sync-upstream\` are retained on subsequent runs.
+          EOF
+          url=$(gh pr list --base main --head 'miguotw:codex/sync-upstream' --state open --json url --jq '.[0].url // empty')
+          if [ -n "$url" ]; then
+            gh pr edit "$url" --body-file "$RUNNER_TEMP/sync-pr.md"
+          else
+            url=$(gh pr create --base main --head codex/sync-upstream --title 'Sync upstream main' --body-file "$RUNNER_TEMP/sync-pr.md")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Synchronization PR: $url" >> "$GITHUB_STEP_SUMMARY"
+
+  validate:
+    needs: prepare
+    if: needs.prepare.outputs.changed == 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/validate.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+
+  summary:
+    needs: [prepare, validate]
+    if: always() && needs.prepare.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions: {}
+    env:
+      VALIDATION: ${{ needs.validate.result }}
+      CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+      PR_URL: ${{ needs.prepare.outputs.pr }}
+    steps:
+      - name: Record validation result
+        shell: bash
+        run: |
+          echo "Candidate: $CANDIDATE_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Windows validation: $VALIDATION" >> "$GITHUB_STEP_SUMMARY"
+          echo "PR: $PR_URL" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Manual review and merge are required. No release was published.' >> "$GITHUB_STEP_SUMMARY"
+          test "$VALIDATION" = success
