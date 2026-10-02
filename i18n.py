@@ -17,7 +17,7 @@ def tr(text):
     return ENGLISH.get(text, text) if _language == "en" else text
 
 
-ENGLISH = {'ASUS ROG / TUF 滑鼠': 'ASUS ROG / TUF mice',
+ENGLISH = {'手機': 'Phone', 'ASUS ROG / TUF 滑鼠': 'ASUS ROG / TUF mice',
  'Corsair 耳機': 'Corsair headsets',
  'G-Wolves 滑鼠': 'G-Wolves mice',
  'LAMZU 滑鼠': 'LAMZU mice',

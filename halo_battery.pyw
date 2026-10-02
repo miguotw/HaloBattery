@@ -613,7 +613,7 @@ def badge_for(st: DeviceStatus) -> str:
 
 # the pictograms a user can pick for one device ("圖示" in its menu); "" = automatic
 PICTOGRAM_CHOICES = (("", "自動"), ("mouse", "滑鼠"), ("keyboard", "鍵盤"),
-                     ("headset", "耳機"), ("gamepad", "控制器"), ("bluetooth", "藍牙"))
+                     ("headset", "耳機"), ("gamepad", "控制器"), ("phone", "手機"), ("bluetooth", "藍牙"))
 
 GAMEPAD_WORDS = ("controller", "gamepad", "joystick", "joy-con")
 

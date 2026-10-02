@@ -31,7 +31,7 @@ CLEAR = (0, 0, 0, 0)
 # device kind aliases (single letters are accepted too)
 KINDS = {"H": "headset", "M": "mouse", "B": "bluetooth", "G": "gamepad", "K": "keyboard",
          "headset": "headset", "mouse": "mouse", "bluetooth": "bluetooth", "gamepad": "gamepad",
-         "keyboard": "keyboard",
+         "keyboard": "keyboard", "phone": "phone",
          "dualshock": "dualshock", "dualsense": "dualsense",
          "ps4": "dualshock", "ps5": "dualsense", "xbox": "gamepad"}
 
@@ -105,6 +105,23 @@ def _keyboard(d: ImageDraw.ImageDraw, cx: float, cy: float, s: float, col):
     d.rounded_rectangle((_r(cx - a), _r(cy - a), _r(cx + a), _r(cy + a)),
                         radius=_r(a * 0.3), fill=col)
     _keycap_k(d, cx + a * 0.02, cy, a * 0.58, max(3.2, s * 0.25))
+
+
+def _phone(d: ImageDraw.ImageDraw, cx: float, cy: float, s: float, col):
+    """iPhone front: rounded frame, screen, Dynamic Island and home indicator."""
+    w = s * 0.58
+    d.rounded_rectangle((_r(cx - w), _r(cy - s), _r(cx + w), _r(cy + s)),
+                        radius=_r(s * 0.24), fill=col)
+    inset = s * 0.24  # about one physical pixel at a 16 px tray size
+    d.rounded_rectangle((_r(cx - w + inset), _r(cy - s + inset),
+                         _r(cx + w - inset), _r(cy + s - inset)),
+                        radius=_r(s * 0.15), fill=CLEAR)
+    d.rounded_rectangle((_r(cx - s * 0.22), _r(cy - s * 0.78),
+                         _r(cx + s * 0.22), _r(cy - s * 0.62)),
+                        radius=_r(s * 0.08), fill=col)
+    d.rounded_rectangle((_r(cx - s * 0.22), _r(cy + s * 0.57),
+                         _r(cx + s * 0.22), _r(cy + s * 0.67)),
+                        radius=_r(s * 0.04), fill=col)
 
 
 def _bluetooth(d: ImageDraw.ImageDraw, cx: float, cy: float, s: float, col):
@@ -194,7 +211,7 @@ def _dualshock(d: ImageDraw.ImageDraw, cx: float, cy: float, s: float, col):
 
 PICTOS = {"headset": (_headset, 0, 2, 18), "mouse": (_mouse, 0, 0, 19.5),
           "bluetooth": (_bluetooth, 0, 0, 18), "gamepad": (_gamepad, 0, 0, 18.4),
-          "keyboard": (_keyboard, 0, 0, 17),
+          "keyboard": (_keyboard, 0, 0, 17), "phone": (_phone, 0, 0, 19.5),
           "dualshock": (_dualshock, 0, -0.2, 18.4),
           "dualsense": (_dualshock, 0, -0.2, 18.4)}   # its own silhouette is still to come
 

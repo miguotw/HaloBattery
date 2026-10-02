@@ -95,7 +95,7 @@ class PictogramTests(HideRenameTestCase):
         app.apply([mouse(80)])
         sub = self.icon_menu(app)
         self.assertEqual([i.text for i in sub.items],
-                         ["自動", "滑鼠", "鍵盤", "耳機", "控制器", "藍牙"])
+                         ["自動", "滑鼠", "鍵盤", "耳機", "控制器", "手機", "藍牙"])
         self.assertEqual([i.text for i in sub.items if i.checked], ["自動"])
 
     def test_pick_saves_redraws_and_checks(self):
