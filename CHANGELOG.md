@@ -7,6 +7,14 @@ upstream follows [Semantic Versioning](https://semver.org/). This fork uses
 
 ## [Unreleased]
 
+### Added
+- Simplified Chinese UI catalog, including the phone icon and poll intervals, with exact Windows UI language detection and persisted manual selection.
+
+### Changed
+- Adopt upstream #162 / PR #188 localization: stable message keys, explicit language arguments, separate static catalogs and plural rules.
+- Preserve Traditional Chinese and Japanese catalogs, phone icon, ASUS 1C5A support and fork versioning; add the upstream French catalog.
+- Keep diagnostics and technical output in English, localize queued notifications when delivered, and handle Unicode rename prompts and tooltip limits.
+
 ## [1.13.0.2] - 2026-10-03
 
 Halo Battery 1.13.0.2 — miguotw 分支版

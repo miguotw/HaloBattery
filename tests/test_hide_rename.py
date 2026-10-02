@@ -1,4 +1,4 @@
-"""Tests for "隱藏此裝置" and "Rename..." in halo_battery.pyw. No tray, no hardware.
+"""Tests for "Hide this device" and "Rename..." in halo_battery.pyw. No tray, no hardware.
 
 The tests load the app module, replace the tray icon class with a small fake one,
 and call the real App methods.
@@ -83,8 +83,7 @@ class FakeTrayIcon:
 def make_app(cfg=None):
     """An App with only the parts that hide / rename / apply use."""
     app = hb.App.__new__(hb.App)
-    app.cfg = dict(hb.DEFAULTS, **dict({"language": "zh-TW"}, **(cfg or {})))
-    hb.i18n.set_language(app.cfg["language"])
+    app.cfg = dict(hb.DEFAULTS, **(cfg or {}))
     app.lock = threading.RLock()
     app.icons, app.missing, app.alerted, app.full_state = {}, {}, {}, {}
     app.placeholder = None
@@ -144,7 +143,7 @@ class HideTests(HideRenameTestCase):
         app.hide(app.icons["logitech:C15E09CD"])
         app.apply([dev()])
         self.assertIsInstance(app.placeholder, FakeTrayIcon)
-        self.assertEqual(app.build_menu(None).items[0].text, "沒有顯示的裝置（已隱藏 1 個）")
+        self.assertEqual(app.build_menu(None).items[0].text, "No devices shown (1 hidden)")
 
     def test_unhide_brings_it_back(self):
         app = make_app({"hidden": {"logitech:C15E09CD": "G502"}})
@@ -164,7 +163,7 @@ class HideTests(HideRenameTestCase):
 
 class RenameTests(HideRenameTestCase):
     def rename_to(self, app, ic, answer):
-        with mock.patch.object(hb, "ask_name", lambda current: answer):
+        with mock.patch.object(hb, "ask_name", lambda current, **kwargs: answer):
             app._rename(ic)
 
     def test_rename_changes_tooltip_and_alert(self):
@@ -175,7 +174,7 @@ class RenameTests(HideRenameTestCase):
         self.assertEqual(ic.titles[-1], "Work mouse: 76%")
         self.assertEqual(self.saved[-1]["names"], {"logitech:C15E09CD": "Work mouse"})
         app.apply([dev(level=5)])
-        self.assertEqual(app.notes, ["Work mouse: 剩餘電量 5%。請充電。"])
+        self.assertEqual(app.notes, ["Work mouse: 5% left. Time to charge."])
 
     def test_cancel_changes_nothing(self):
         app = make_app()
@@ -211,24 +210,24 @@ class MenuTests(HideRenameTestCase):
         app = make_app()
         app.apply([dev()])
         texts = self.texts(app.build_menu(app.icons["logitech:C15E09CD"]))
-        self.assertIn("重新命名…", texts)
-        self.assertIn("隱藏此裝置", texts)
-        self.assertNotIn("重設名稱", texts)
-        self.assertNotIn("隱藏的裝置", texts)
+        self.assertIn("Rename…", texts)
+        self.assertIn("Hide this device", texts)
+        self.assertNotIn("Reset name", texts)
+        self.assertNotIn("Hidden devices", texts)
 
     def test_hidden_devices_submenu(self):
         app = make_app({"hidden": {"a": "Xbox Controller", "b": "8BitDo"}})
         menu = app.build_menu(None)
-        self.assertIn("隱藏的裝置", self.texts(menu))
-        sub = next(i for i in menu.items if i.text == "隱藏的裝置").submenu
-        self.assertEqual([i.text for i in sub.items], ["顯示 8BitDo", "顯示 Xbox Controller"])
-        self.assertEqual(menu.items[0].text, "沒有顯示的裝置（已隱藏 2 個）")
-        self.assertNotIn("重新命名…", self.texts(menu), "the no-devices icon has no device items")
+        self.assertIn("Hidden devices", self.texts(menu))
+        sub = next(i for i in menu.items if i.text == "Hidden devices").submenu
+        self.assertEqual([i.text for i in sub.items], ["Show 8BitDo", "Show Xbox Controller"])
+        self.assertEqual(menu.items[0].text, "No devices shown (2 hidden)")
+        self.assertNotIn("Rename…", self.texts(menu), "the no-devices icon has no device items")
 
     def test_clicking_show_brings_the_device_back(self):
         app = make_app({"hidden": {"logitech:C15E09CD": "G502"}})
         menu = app.build_menu(None)
-        sub = next(i for i in menu.items if i.text == "隱藏的裝置").submenu
+        sub = next(i for i in menu.items if i.text == "Hidden devices").submenu
         [show] = list(sub.items)
         show(FakeTrayIcon())                         # what pystray does on a click
         self.assertEqual(app.cfg["hidden"], {})
@@ -240,10 +239,10 @@ class MenuTests(HideRenameTestCase):
         app.apply([dev()])
         ic = app.icons["logitech:C15E09CD"]
         items = {i.text: i for i in app.build_menu(ic).items if i.visible}
-        with mock.patch.object(hb, "ask_name", lambda current: "Work mouse"):
-            items["重新命名…"](FakeTrayIcon())
+        with mock.patch.object(hb, "ask_name", lambda current, **kwargs: "Work mouse"):
+            items["Rename…"](FakeTrayIcon())
         self.assertEqual(app.cfg["names"], {"logitech:C15E09CD": "Work mouse"})
-        items["隱藏此裝置"](FakeTrayIcon())
+        items["Hide this device"](FakeTrayIcon())
         self.assertEqual(app.cfg["hidden"], {"logitech:C15E09CD": "Work mouse"})
 
 
@@ -253,38 +252,38 @@ class MenuLayoutTests(HideRenameTestCase):
         app.apply([dev()])
         texts = [i.text for i in app.build_menu(app.icons["logitech:C15E09CD"]).items
                  if i.visible and i is not hb.Menu.SEPARATOR]
-        self.assertEqual(texts, ["G502 LIGHTSPEED: 76%", "重新命名…", "圖示", "低電量提醒門檻",
-                                 "隱藏此裝置",
-                                 "立即更新", "偏好設定", "診斷報告…",
-                                 f"結束（v{hb.VERSION}）"])
+        self.assertEqual(texts, ["G502 LIGHTSPEED: 76%", "Rename…", "Icon", "Low battery alert at",
+                                 "Hide this device",
+                                 "Refresh now", "Preferences", "Diagnostics…",
+                                 f"Exit (v{hb.VERSION})"])
 
     def test_hidden_devices_sits_with_preferences(self):
         app = make_app({"hidden": {"a": "Xbox Controller"}})
         app.apply([dev()])
         texts = [i.text for i in app.build_menu(app.icons["logitech:C15E09CD"]).items
                  if i.visible and i is not hb.Menu.SEPARATOR]
-        self.assertEqual(texts, ["G502 LIGHTSPEED: 76%", "重新命名…", "圖示", "低電量提醒門檻",
-                                 "隱藏此裝置",
-                                 "立即更新", "偏好設定", "隱藏的裝置",
-                                 "診斷報告…", f"結束（v{hb.VERSION}）"])
+        self.assertEqual(texts, ["G502 LIGHTSPEED: 76%", "Rename…", "Icon", "Low battery alert at",
+                                 "Hide this device",
+                                 "Refresh now", "Preferences", "Hidden devices",
+                                 "Diagnostics…", f"Exit (v{hb.VERSION})"])
 
     def test_preferences_holds_the_settings(self):
         app = make_app()
         menu = app.build_menu(None)
-        prefs = next(i for i in menu.items if i.text == "偏好設定").submenu
+        prefs = next(i for i in menu.items if i.text == "Preferences").submenu
         texts = [i.text for i in prefs.items if i is not hb.Menu.SEPARATOR]
-        self.assertEqual(texts, ["語言", "更新間隔", "低電量提醒", "充飽電時通知",
-                                 "預估剩餘使用時間", "遊戲時保持安靜",
-                                 "Windows 藍牙裝置", "PlayStation 完整模式（藍牙）",
-                                 "裝置類型",
-                                 "裝置圖案", "在圖示中顯示百分比", "充電動畫",
-                                 "圖示顏色", "供其他應用程式使用的狀態檔",
-                                 "隨 Windows 啟動", "檢查更新"])
+        self.assertEqual(texts, ["Language / Langue", "Poll interval", "Low battery alert", "Alert when fully charged",
+                                 "Estimated time left", "Quiet while gaming",
+                                 "Windows Bluetooth devices", "PlayStation full mode (Bluetooth)",
+                                 "Device types",
+                                 "Device pictogram", "Percentage in the icon", "Charging animation",
+                                 "Icon colour", "Status file for other apps",
+                                 "Start with Windows", "Check for updates"])
 
 
 class MenuRefreshTests(unittest.TestCase):
     """pystray builds the Windows menu once. The real DeviceIcon must rebuild it when
-    the text changes, or the header keeps "找不到裝置"."""
+    the text changes, or the header keeps "No devices found"."""
 
     def make_icon(self):
         ic = hb.DeviceIcon.__new__(hb.DeviceIcon)

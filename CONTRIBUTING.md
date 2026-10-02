@@ -83,3 +83,25 @@ Bluetooth devices: Halo Battery shows the level that Windows itself reports. If 
    - which other open pull requests change the same files.
 
 Look at the open issues and pull requests first, so that two people do not do the same work.
+
+
+## Localization
+
+This fork follows upstream issue #162 and PR #188. UI messages use stable keys
+and explicitly selected languages; diagnostic output stays in English.
+
+Add or update messages in `locales/en.py`, `locales/fr.py`, `locales/zh_TW.py`
+`locales/zh_CN.py` and `locales/ja.py`. Every catalog must contain the same keys and formatting
+parameters. Plural messages use the forms declared by their `Language` registry
+entry in `i18n.py`; Chinese and Japanese use only `other`.
+
+Use `app.tr("message.key", parameter=value)` inside the app, or
+`i18n.translate("message.key", language=code, parameter=value)` elsewhere.
+Providers keep technical `approx` text in English and supply `ui_message` and
+`ui_params` for localized display. Do not translate diagnostic strings or store
+rendered notifications; queued notifications are translated when delivered.
+
+To add a language, create a statically imported catalog and register its name,
+plural rule and Windows language IDs in `i18n.LANGUAGES`. Use exact LANGIDs when
+regional variants need distinct treatment (such as Traditional Chinese).
+Run `python -m unittest discover -s tests` to validate catalogs and behavior.

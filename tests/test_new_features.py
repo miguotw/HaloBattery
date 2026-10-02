@@ -88,25 +88,25 @@ class DeviceTypeTests(HideRenameTestCase):
 
     def test_menu_lists_every_type_and_toggles(self):
         app = poll_app()
-        prefs = item(app.build_menu(None), "偏好設定").submenu
-        types = item(prefs, "裝置類型").submenu
+        prefs = item(app.build_menu(None), "Preferences").submenu
+        types = item(prefs, "Device types").submenu
         labels = [i.text for i in types.items]
         for label in hb.PROVIDER_LABELS.values():
             self.assertIn(label, labels)
-        razer = item(types, "Razer 滑鼠與耳機")
+        razer = item(types, "Razer mice and headsets")
         self.assertTrue(razer.checked)
         razer(FakeTrayIcon())
         self.assertIn("razer", app.cfg["disabled_providers"])
-        self.assertFalse(item(item(prefs, "裝置類型").submenu, "Razer 滑鼠與耳機").checked)
+        self.assertFalse(item(item(prefs, "Device types").submenu, "Razer mice and headsets").checked)
 
     def test_playstation_full_mode_stays_in_preferences(self):
-        # #96 is handled by "PlayStation 完整模式（藍牙）" (off = listen only), so
+        # #96 is handled by "PlayStation full mode (Bluetooth)" (off = listen only), so
         # Device types has no Bluetooth switch of its own for PlayStation controllers
         app = poll_app()
-        prefs = item(app.build_menu(None), "偏好設定").submenu
-        types = item(prefs, "裝置類型").submenu
+        prefs = item(app.build_menu(None), "Preferences").submenu
+        types = item(prefs, "Device types").submenu
         self.assertFalse(any("Bluetooth" in i.text for i in types.items))
-        self.assertIn("PlayStation 完整模式（藍牙）", [i.text for i in prefs.items])
+        self.assertIn("PlayStation full mode (Bluetooth)", [i.text for i in prefs.items])
 
     def test_full_mode_setting_reaches_the_playstation_provider(self):
         app = poll_app({"playstation_full_mode": True})
@@ -166,14 +166,14 @@ class DeviceLowTests(HideRenameTestCase):
         app = make_app({"low": 20})
         app.apply([mouse(35)])
         ic = app.icons[KEY]
-        sub = item(app.build_menu(ic), "低電量提醒門檻").submenu
-        self.assertEqual(sub.items[0].text, "預設（20%）")
+        sub = item(app.build_menu(ic), "Low battery alert at").submenu
+        self.assertEqual(sub.items[0].text, "Default (20%)")
         self.assertTrue(sub.items[0].checked)
         item(sub, "30%")(FakeTrayIcon())
         self.assertEqual(app.cfg["lows"], {KEY: 30})
-        self.assertTrue(item(item(app.build_menu(ic), "低電量提醒門檻").submenu, "30%").checked)
+        self.assertTrue(item(item(app.build_menu(ic), "Low battery alert at").submenu, "30%").checked)
         # a new level that the device is already under alerts on the next reading
-        item(sub, "預設（20%）")(FakeTrayIcon())
+        item(sub, "Default (20%)")(FakeTrayIcon())
         self.assertEqual(app.cfg["lows"], {})
         item(sub, "30%")(FakeTrayIcon())
         app.apply([mouse(29)])
@@ -294,9 +294,9 @@ class HistoryTests(unittest.TestCase):
                 self.assertEqual(h.devices, {})
 
     def test_format(self):
-        self.assertEqual(history.format_left(1800), "剩餘使用時間不到 1 小時")
-        self.assertEqual(history.format_left(5.4 * H), "約可再使用 5 小時")
-        self.assertEqual(history.format_left(72 * H), "約可再使用 3 天")
+        self.assertEqual(history.format_left(1800), "less than 1 h of use left")
+        self.assertEqual(history.format_left(5.4 * H), "about 5 h of use left")
+        self.assertEqual(history.format_left(72 * H), "about 3 days of use left")
 
 
 class TimeLeftTooltipTests(HideRenameTestCase):
@@ -309,14 +309,14 @@ class TimeLeftTooltipTests(HideRenameTestCase):
     def test_tooltip_shows_time_left(self):
         app = self.app_with_history()
         text = hb.describe(mouse(85), "Viper", app.time_left_text(mouse(85)))
-        self.assertRegex(text, r"^Viper: 85%，約可再使用 1\d 小時$")
+        self.assertRegex(text, r"^Viper: 85%, about 1\d h of use left$")
 
     def test_not_while_charging_or_asleep(self):
         app = self.app_with_history()
         left = app.time_left_text(mouse(85))
-        self.assertEqual(hb.describe(mouse(85, charging=True), None, left), "Viper: 85%，充電中")
+        self.assertEqual(hb.describe(mouse(85, charging=True), None, left), "Viper: 85%, charging")
         self.assertEqual(hb.describe(mouse(85, online=False), None, left),
-                         "Viper: 85%（上次記錄的電量，裝置休眠中）")
+                         "Viper: 85% (last known value, device asleep)")
 
     def test_setting_off(self):
         app = self.app_with_history({"time_left": False})

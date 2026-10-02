@@ -18,32 +18,17 @@ from test_hide_rename import dev, hb, make_app  # noqa: E402
 
 class TextTests(unittest.TestCase):
     def test_texts_are_the_ones_users_see(self):
-        self.assertEqual(hb.low_battery_text("G502", 15, False), "G502: 剩餘電量 15%。請充電。")
-        self.assertEqual(hb.low_battery_text("Pad", None, True), "Pad: 電量不足。請充電。")
-        self.assertEqual(hb.fully_charged_text("G502"), "G502 已充飽電。")
-        self.assertIn("下載 v1.2.3…", hb.update_text("1.2.3"))
+        self.assertEqual(hb.low_battery_text("G502", 15, False), "G502: 15% left. Time to charge.")
+        self.assertEqual(hb.low_battery_text("Pad", None, True), "Pad: battery is low. Time to charge.")
+        self.assertEqual(hb.fully_charged_text("G502"), "G502 is fully charged.")
+        self.assertIn("Download v1.2.3…", hb.update_text("1.2.3"))
 
     def test_real_low_battery_alert_uses_the_shared_text(self):
         app = make_app({"low": 20})
-        with mock.patch.object(hb, "DeviceIcon", __import__("test_hide_rename").FakeIcon):
+        with mock.patch.object(hb, "DeviceIcon", __import__("test_hide_rename").FakeIcon), \
+                mock.patch.object(hb, "fullscreen_app_running", return_value=False):
             app.apply([dev(level=10)])
         self.assertEqual(app.notes, [hb.low_battery_text("G502 LIGHTSPEED", 10, False)])
-
-
-class LocalizedStatusTests(unittest.TestCase):
-    def test_provider_states_are_translated_for_display(self):
-        cases = {
-            "about 50% (medium), charging": "約 50% (中等)，充電中",
-            "about 5% (critical)": "約 5% (極低)",
-            "about 75% (medium) (last known value)": "約 75% (中等) (上次記錄的電量)",
-            "on cable, charging": "已接上充電線，充電中",
-            "connected, battery level not reported yet": "已連線，尚未回報電量",
-        }
-        for source, expected in cases.items():
-            with self.subTest(source=source):
-                state = dev()
-                state.approx = source
-                self.assertEqual(hb.device_state(state), expected)
 
 
 class AppIdTests(unittest.TestCase):

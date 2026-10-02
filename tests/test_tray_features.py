@@ -33,7 +33,7 @@ class FullChargeTests(HideRenameTestCase):
 
     def test_alert_when_a_charging_device_reaches_100(self):
         app = self.run_levels([(90, True), (99, True), (100, True)])
-        self.assertEqual(app.notes, ["Pro Click V2 Vertical 已充飽電。"])
+        self.assertEqual(app.notes, ["Pro Click V2 Vertical is fully charged."])
 
     def test_device_that_stops_reporting_charging_when_full(self):
         app = self.run_levels([(97, True), (100, False)])
@@ -65,7 +65,7 @@ class FullChargeTests(HideRenameTestCase):
 
     def test_uses_the_name_the_user_gave(self):
         app = self.run_levels([(90, True), (100, True)], {"names": {KEY: "Work mouse"}})
-        self.assertEqual(app.notes, ["Work mouse 已充飽電。"])
+        self.assertEqual(app.notes, ["Work mouse is fully charged."])
 
     def test_asleep_or_unknown_level_changes_nothing(self):
         app = self.run_levels([(90, True), (90, True, False), (100, True)])
@@ -75,8 +75,8 @@ class FullChargeTests(HideRenameTestCase):
 
     def test_setting_is_in_preferences_and_toggles(self):
         app = make_app()
-        prefs = next(i for i in app.build_menu(None).items if i.text == "偏好設定").submenu
-        item = next(i for i in prefs.items if i.text == "充飽電時通知")
+        prefs = next(i for i in app.build_menu(None).items if i.text == "Preferences").submenu
+        item = next(i for i in prefs.items if i.text == "Alert when fully charged")
         self.assertTrue(item.checked)
         item(None)
         self.assertFalse(app.cfg["full_alert"])
@@ -84,19 +84,19 @@ class FullChargeTests(HideRenameTestCase):
 
 
 class PictogramTests(HideRenameTestCase):
-    """"圖示" in the device menu: pick the pictogram of one device."""
+    """"Icon" in the device menu: pick the pictogram of one device."""
 
     def icon_menu(self, app, key=KEY):
         items = app.build_menu(app.icons[key]).items
-        return next(i for i in items if i.text == "圖示").submenu
+        return next(i for i in items if i.text == "Icon").submenu
 
     def test_menu_lists_the_choices_with_automatic_checked(self):
         app = make_app()
         app.apply([mouse(80)])
         sub = self.icon_menu(app)
         self.assertEqual([i.text for i in sub.items],
-                         ["自動", "滑鼠", "鍵盤", "耳機", "控制器", "手機", "藍牙"])
-        self.assertEqual([i.text for i in sub.items if i.checked], ["自動"])
+                         ["Automatic", "Mouse", "Keyboard", "Headset", "Controller", "Phone", "Bluetooth"])
+        self.assertEqual([i.text for i in sub.items if i.checked], ["Automatic"])
 
     def test_pick_saves_redraws_and_checks(self):
         app = make_app()
@@ -104,17 +104,17 @@ class PictogramTests(HideRenameTestCase):
         ic = app.icons[KEY]
         sub = self.icon_menu(app)
         updates = len(ic.titles)
-        next(i for i in sub.items if i.text == "控制器")(None)
+        next(i for i in sub.items if i.text == "Controller")(None)
         self.assertEqual(self.saved[-1]["icons"], {KEY: "gamepad"})
         self.assertEqual(app.pictogram(ic.status), "gamepad")
         self.assertEqual(len(ic.titles), updates + 1)       # the icon is redrawn at once
-        self.assertEqual([i.text for i in self.icon_menu(app).items if i.checked], ["控制器"])
+        self.assertEqual([i.text for i in self.icon_menu(app).items if i.checked], ["Controller"])
 
     def test_automatic_goes_back(self):
         app = make_app({"icons": {KEY: "keyboard"}})
         app.apply([mouse(80)])
         self.assertEqual(app.pictogram(app.icons[KEY].status), "keyboard")
-        next(i for i in self.icon_menu(app).items if i.text == "自動")(None)
+        next(i for i in self.icon_menu(app).items if i.text == "Automatic")(None)
         self.assertEqual(self.saved[-1]["icons"], {})
         self.assertEqual(app.pictogram(app.icons[KEY].status), "mouse")
 
@@ -139,7 +139,7 @@ class PictogramTests(HideRenameTestCase):
 
     def test_no_icon_menu_on_the_no_devices_icon(self):
         app = make_app()
-        self.assertNotIn("圖示", [i.text for i in app.build_menu(None).items])
+        self.assertNotIn("Icon", [i.text for i in app.build_menu(None).items])
 
 
 class PictogramDrawTests(unittest.TestCase):

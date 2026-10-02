@@ -1,4 +1,4 @@
-"""Tests for "在圖示中顯示百分比", "遊戲時保持安靜" and the status file.
+"""Tests for "Percentage in the icon", "Quiet while gaming" and the status file.
 No tray, no hardware: the app module is loaded with the fake icons of
 test_hide_rename.py, and the real App methods are called.
 
@@ -95,8 +95,8 @@ class NumberSettingTests(HideRenameTestCase):
 
     def test_menu_toggles(self):
         app = make_app()
-        prefs = item(app.build_menu(None), "偏好設定").submenu
-        entry = item(prefs, "在圖示中顯示百分比")
+        prefs = item(app.build_menu(None), "Preferences").submenu
+        entry = item(prefs, "Percentage in the icon")
         self.assertFalse(entry.checked)
         entry(FakeTrayIcon())
         self.assertTrue(app.cfg["percent_in_icon"])
@@ -117,7 +117,7 @@ class QuietTests(HideRenameTestCase):
         self.assertEqual(len(app.held), 1)
         self.game(False)
         app.flush_held()
-        self.assertEqual(app.notes, ["Viper: 剩餘電量 15%。請充電。"])
+        self.assertEqual(app.notes, ["Viper: 15% left. Time to charge."])
         self.assertEqual(app.held, {})
 
     def test_one_held_alert_per_device_and_kind(self):
@@ -132,7 +132,7 @@ class QuietTests(HideRenameTestCase):
         self.game(False)
         app.flush_held()
         self.assertEqual(sorted(app.notes),
-                         ["Viper 已充飽電。", "Viper: 剩餘電量 12%。請充電。"])
+                         ["Viper is fully charged.", "Viper: 12% left. Time to charge."])
 
     def test_low_alert_is_dropped_when_it_was_charged_meanwhile(self):
         app = make_app({"low": 20})
@@ -184,7 +184,7 @@ class QuietTests(HideRenameTestCase):
 
     def test_menu_toggles(self):
         app = make_app()
-        entry = item(item(app.build_menu(None), "偏好設定").submenu, "遊戲時保持安靜")
+        entry = item(item(app.build_menu(None), "Preferences").submenu, "Quiet while gaming")
         self.assertTrue(entry.checked)
         entry(FakeTrayIcon())
         self.assertFalse(app.cfg["quiet_fullscreen"])
@@ -238,7 +238,7 @@ class StatusFileTests(HideRenameTestCase):
     def test_turning_off_removes_the_file(self):
         app = make_app({"status_file": True})
         app.write_status([mouse(67)])
-        entry = item(item(app.build_menu(None), "偏好設定").submenu, "供其他應用程式使用的狀態檔")
+        entry = item(item(app.build_menu(None), "Preferences").submenu, "Status file for other apps")
         self.assertTrue(entry.checked)
         entry(FakeTrayIcon())
         self.assertFalse(os.path.exists(self.path))
