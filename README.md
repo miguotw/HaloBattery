@@ -18,67 +18,14 @@
 
 ## 支援的裝置
 
-**「是」**表示已實際讀到該裝置的電量，驗證來源可能是本專案測試、診斷報告或使用者回報。**「否」**表示依其他工具的程式碼實作，但尚未於實機驗證。**「預期可用」**表示同系列其他型號共用程式邏輯，預期可正常使用，但尚未逐一測試。表格中的連結指向各裝置的[電量讀取協定說明](docs/protocols.md)（英文）。
-
-| 裝置 | 連線方式 | 已於實機驗證 |
-|---|---|---|
-| [8BitDo Pro 2, Pro 3, SN30 Pro, SF30 Pro （D-input 模式）](docs/protocols.md#8bitdo-pro-2-pro-3-sn30-pro-sf30-pro-in-d-input-mode) | 藍牙或 USB | 否 |
-| [AM Infinity 8K (Angry Miao)](docs/protocols.md#am-infinity-8k-angry-miao) | 2.4 GHz 接收器 | 否 |
-| [Astro A50 Gen 5 (Logitech 046D:0B1C)](docs/protocols.md#astro-a50-gen-5-logitech-046d0b1c) | 基地台 | 否 |
-| ASUS TX Gaming Mouse Mini Miku (`0B05:1C5A`) | 2.4 GHz 接收器 | 是 |
-| [ASUS ROG Gladius III Aimpoint 及其他 ROG / TUF 無線滑鼠（清單見 `providers/asus.py`）](docs/protocols.md#asus-rog-gladius-iii-aimpoint-and-other-rog--tuf-wireless-mice) | 2.4 GHz 接收器或 USB 傳輸線 | 否 |
-| [Audeze Maxwell](docs/protocols.md#audeze-maxwell) | 2.4 GHz 接收器或 USB-C 傳輸線 | 是 |
-| [藍牙裝置，已測試 1MORE SonoFlow 耳機（另有使用者回報 Audio-Technica 與 JBL Tune 760NC 耳機可用）](docs/protocols.md#bluetooth-devices-tested-on-the-1more-sonoflow-headset) | 藍牙（預設啟用，可在選單關閉） | 是 |
-| [Corsair Dark Core RGB Pro SE](docs/protocols.md#corsair-dark-core-rgb-pro-se) | 2.4 GHz 接收器 | 否 |
-| [Corsair Void v2 Wireless, Virtuoso Max Wireless, HS80 Max Wireless](docs/protocols.md#corsair-void-v2-wireless-virtuoso-max-wireless-hs80-max-wireless) | 無線接收器 | 否 |
-| [GameSir G7 Pro; FlyDigi Vader Pro （使用者已測試）](docs/protocols.md#gamesir-g7-pro-flydigi-vader-pro) | 2.4 GHz 接收器（識別為 Xbox 控制器） | 是 |
-| [G-Wolves WARG, HTS Plus (Pro), HTXU, Lycan, Fenrir Pro / Asym, HTX Mini](docs/protocols.md#g-wolves-warg-hts-plus-pro-htxu-lycan-fenrir-pro--asym-htx-mini) | 8K 接收器或 USB 傳輸線 | 否 |
-| [Hitscan Hyperlight](docs/protocols.md#hitscan-hyperlight) | 2.4 GHz 接收器或 USB 傳輸線 | 否 |
-| [HyperX Cloud Alpha 2](docs/protocols.md#hyperx-cloud-alpha-2) | 2.4 GHz 基地台 | 是 |
-| [HyperX Cloud II Wireless](docs/protocols.md#hyperx-cloud-ii-wireless) | 2.4 GHz 接收器 | 否 |
-| [HyperX Cloud III Wireless](docs/protocols.md#hyperx-cloud-iii-wireless) | 2.4 GHz 接收器 | 否 |
-| [JBL Quantum 910 Wireless](docs/protocols.md#jbl-quantum-910-wireless) | 2.4 GHz 接收器 | 是 |
-| [Keychron Ultra-Link 8K, Keychron M5](docs/protocols.md#keychron-ultra-link-8k-keychron-m5) | 2.4 GHz 接收器與 USB 傳輸線 | 否 |
-| [LAMZU Maya X](docs/protocols.md#lamzu-maya-x) | 8K 接收器或 USB 傳輸線 | 是 |
-| [Lofree Hyzen](docs/protocols.md#lofree-hyzen) | 2.4 GHz 接收器 | 否 |
-| [Logitech G502 LIGHTSPEED, G502 X PLUS](docs/protocols.md#logitech-g502-lightspeed-g502-x-plus) | Lightspeed 接收器 | 是 |
-| [Logitech （其他 HID++ 2.0 裝置與 G 系列耳機）](docs/protocols.md#logitech-more-hid-20-devices-and-g-series-headsets) | Lightspeed、Unifying 或 Bolt 接收器 | 預期可用 |
-| [MCHOSE A7 V2 Ultra](docs/protocols.md#mchose-a7-v2-ultra) | 2.4 GHz 接收器 | 否 |
-| [MCHOSE G7](docs/protocols.md#mchose-g7) | USB（晶片為「YJX-CHIP」） | 是 |
-| [MCHOSE M7 Ultra](docs/protocols.md#mchose-m7-ultra) | 2.4 GHz 接收器 | 是 |
-| [Nintendo Switch Pro Controller, Joy-Con (L) / (R)](docs/protocols.md#nintendo-switch-pro-controller-joy-con-l--r) | 藍牙 | 否 |
-| [Pulsar X2 V2 Mini, ATK VXE R1 SE+, VXE R1 Pro Max](docs/protocols.md#pulsar-x2-v2-mini-atk-vxe-r1-se-vxe-r1-pro-max) | 2.4 GHz 接收器與 USB 傳輸線 | 是 |
-| [Razer Barracuda Pro (2.4 GHz)](docs/protocols.md#razer-barracuda-pro-24-ghz) | 2.4 GHz 接收器 | 是 |
-| [Razer Basilisk V3 Pro, Razer Basilisk Ultimate （使用者已測試）](docs/protocols.md#razer-basilisk-v3-pro-razer-basilisk-ultimate) | 2.4 GHz 接收器 | 是 |
-| [Razer BlackShark V2 Pro (2023)](docs/protocols.md#razer-blackshark-v2-pro-2023) | 2.4 GHz 接收器 | 是 |
-| [Razer BlackWidow V3 Pro](docs/protocols.md#razer-blackwidow-v3-pro) | 2.4 GHz 接收器或 USB 傳輸線 | 否 |
-| [Razer DeathAdder V4 Pro](docs/protocols.md#razer-deathadder-v4-pro) | 2.4 GHz 接收器 | 是 |
-| [Razer 無線滑鼠 （其他 OpenRazer 型號）](docs/protocols.md#razer-wireless-mice-other-openrazer-models) | 2.4 GHz 接收器或 USB 傳輸線 | 預期可用 |
-| [Sony DualSense (PS5)](docs/protocols.md#sony-dualsense-ps5) | USB 或藍牙 | 是 |
-| [Sony DualShock 4 (PS4)](docs/protocols.md#sony-dualshock-4-ps4) | USB 傳輸線與藍牙 | 是 |
-| [SteelSeries Aerox 3 Wireless](docs/protocols.md#steelseries-aerox-3-wireless) | 2.4 GHz 接收器 | 否 |
-| [SteelSeries Arctis and GameBuds （其他型號）](docs/protocols.md#steelseries-arctis-and-gamebuds-other-models) | 無線基地台或接收器 | 預期可用 |
-| [SteelSeries Arctis Nova 7](docs/protocols.md#steelseries-arctis-nova-7) | 2.4 GHz 接收器 | 是 |
-| [SteelSeries Arctis Nova Pro Wireless (`1038:12E0`, `1038:12E5` X)](docs/protocols.md#steelseries-arctis-nova-pro-wireless-103812e0-103812e5-x) | 無線基地台，介面 3 或 4 | 否 |
-| [SteelSeries Rival 3 Wireless](docs/protocols.md#steelseries-rival-3-wireless) | 2.4 GHz 接收器 | 否 |
-| [WLmouse Beast X and Beast X Mini Pro](docs/protocols.md#wlmouse-beast-x-and-beast-x-mini-pro) | 8K 或 1K 接收器，或 USB 傳輸線 | 預期可用 |
-| [WLmouse Beast X Max](docs/protocols.md#wlmouse-beast-x-max) | 8K 接收器與 USB 傳輸線 | 是 |
-| [Xbox 相容控制器 （其他型號）](docs/protocols.md#xbox-compatible-controllers-other-models) | USB 或 Xbox 無線接收器 | 預期可用 |
-
-**透過藍牙連接的 PlayStation 控制器：** DualShock 4 與 DualSense 只有在「完整回報」模式下，才會透過藍牙提供電量。切換至此模式會使使用 DirectInput 的遊戲無法辨識控制器，直到控制器關閉後重新開啟（#96）。因此程式預設不會切換模式：當 Steam 或遊戲已將控制器切換至此模式時會顯示電量，否則只顯示控制器圖示。如果你不使用受影響的遊戲，可啟用「偏好設定 → PlayStation 完整模式（藍牙）」以持續讀取電量。透過 USB 連接時可正常顯示電量。
-
-**D-input 模式下的 8BitDo 控制器：** 電量只包含在控制器的增強回報中。切換至此模式會讓 DirectInput 遊戲無法辨識控制器，直到關閉後重新開啟（#101 的回報者已驗證）。程式不會主動切換：只有在 Steam 或遊戲已切換模式時顯示電量，否則只顯示圖示。XInput 模式下可正常顯示電量。
-
-標示為「預期可用」的裝置包含 OpenRazer 支援的其他 Razer 型號、其他 WLmouse 型號、更多 Logitech HID++ 2.0 裝置與 G 系列耳機、其他 Arctis Nova 與較舊的 Arctis 型號，以及其他 Xbox 相容控制器；它們使用同一套讀取邏輯。
-
-不保證其他裝置都能使用。新裝置支援會依使用者回饋與診斷紀錄加入；如果裝置未被偵測或電量不正確，請建立 Issue 並附上診斷報告，詳見下方「疑難排解」。
+完整清單、連線方式與實機驗證狀態見[支援裝置清單（英文）](docs/devices.md)，協定來源見[技術說明（英文）](docs/protocols.md)。本分支另提供 ASUS TX Gaming Mouse Mini Miku (`0B05:1C5A`) 的 2.4 GHz 接收器支援。
 
 ## 安裝
 
 ### 方式一：下載已建置的 EXE（建議）
 
 1. 從本分支的 [Releases](https://github.com/miguotw/HaloBattery/releases/latest) 下載 `HaloBattery-<版本>.zip`。
-2. 解壓縮至固定資料夾，例如 `C:Tools`，讓執行檔位於 `C:ToolsHaloBatteryHaloBattery.exe`，再執行 `HaloBattery.exe`。請保留完整的 `HaloBattery` 資料夾：EXE 必須與 `_internal` 資料夾放在一起。
+2. 解壓縮至固定資料夾，例如 `C:\Tools`，讓執行檔位於 `C:\Tools\HaloBattery\HaloBattery.exe`，再執行 `HaloBattery.exe`。請保留完整的 `HaloBattery` 資料夾：EXE 必須與 `_internal` 資料夾放在一起。
 3. 在系統匣圖示上按右鍵，選擇「偏好設定 → 隨 Windows 啟動」。
 
 首次啟動時會依 Windows 使用者的介面語言自動選擇；不支援的語言或讀取失敗時使用 English。你可以在「偏好設定 → 語言」選擇 **English**、**繁體中文**、**简体中文**、**日本語** 或 **Français**，切換後立即生效，並記住選擇供下次啟動使用。
@@ -90,10 +37,14 @@
 ### 方式二：從原始碼執行
 
 1. 安裝 [Python 3.10 以上版本](https://www.python.org/downloads/)，並勾選 **Add python.exe to PATH**。
-2. 將本儲存庫下載或複製至固定資料夾，例如 `C:ToolsHaloBattery`。
+2. 將本儲存庫下載或複製至固定資料夾，例如 `C:\Tools\HaloBattery`。
 3. 執行 `install_and_run.bat`，再於系統匣圖示按右鍵，選擇「偏好設定 → 隨 Windows 啟動」。
 
-執行 `build_exe.bat` 可自行建置，輸出位於 `distHaloBattery`。發布流程由 `.github/workflows/release.yml` 管理：推送如 `v1.13.0.1` 的 tag 後，GitHub Actions 會建置程式並將 ZIP 附加至 Release。tag 必須符合 `version.py` 產生的版本，且 `CHANGELOG.md` 必須有對應的版本說明。
+執行 `build_exe.bat` 可自行建置，輸出位於 `dist\HaloBattery`。發布流程由 `.github/workflows/release.yml` 管理：推送如 `v1.13.0.1` 的 tag 後，GitHub Actions 會建置程式並將 ZIP 附加至 Release。tag 必須符合 `version.py` 產生的版本，且 `CHANGELOG.md` 必須有對應的版本說明。
+
+### 可攜模式
+
+在 `HaloBattery.exe`（原始碼版為 `halo_battery.pyw`）旁建立空白 `portable.txt` 後重新啟動，即可將設定、紀錄、電量歷史、狀態檔及診斷報告放在程式資料夾。資料夾必須可寫入；否則退回 `%APPDATA%\HaloBattery` 並記錄原因。設定不會自動搬移，可自行複製原有 `config.json`。「隨 Windows 啟動」仍會使用目前使用者的登錄設定。
 
 ## 圖示說明
 
@@ -107,7 +58,7 @@
 
 ## 系統匣選單
 
-在裝置圖示按右鍵即可開啟選單。選單採用 Windows 11 風格（壓克力背景、圓角及深／淺色主題），並支援顯示縮放。如果在你的電腦上無法正常使用，可在 `%APPDATA%HaloBatteryconfig.json` 設定 `"fluent_menu": false`，改回傳統 Windows 選單。
+在裝置圖示按右鍵即可開啟選單。選單採用 Windows 11 風格（壓克力背景、圓角及深／淺色主題），並支援顯示縮放。如果在你的電腦上無法正常使用，可在 `%APPDATA%\HaloBattery\config.json` 設定 `"fluent_menu": false`，改回傳統 Windows 選單。
 
 ### 裝置操作
 
@@ -118,6 +69,8 @@
 - **立即更新**：立即重新讀取電量。
 
 ### 偏好設定
+
+- **低電量提醒時播放音效**：預設關閉；裝置清醒、低電量且未充電時播放 Windows 音效，每 5 分鐘重播。
 
 - **語言**：選擇 English、繁體中文、简体中文、日本語或 Français。選單、電量提示及通知會立即切換，並儲存選擇。未設定時依 Windows 介面語言選擇，不支援時使用 English；手動選擇會優先保留。
 - **更新間隔**與**低電量提醒**：更新間隔可設為 15 秒至 5 分鐘；低電量提醒可關閉或設為 10–30%。可用 −／＋ 按鈕或滑鼠滾輪調整，選單會保持開啟。

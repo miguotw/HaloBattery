@@ -116,4 +116,8 @@ MESSAGES = {'device.description': '{name} : {state}',
  'rename.cancel': 'Annuler',
  'icon.phone': 'Téléphone',
  'interval.seconds': {'one': '{count} s', 'other': '{count} s'},
- 'interval.minutes': {'one': '{count} min', 'other': '{count} min'}}
+ 'interval.minutes': {'one': '{count} min', 'other': '{count} min'},
+ 'preferences.low_sound': 'Son avec l’alerte de batterie faible',
+ 'provider.hyperx_cloud3s': 'HyperX Cloud III S Wireless',
+ 'provider.logitech_centurion': 'Logitech G PRO X 2 LIGHTSPEED',
+ 'provider.steelseries_elite': 'SteelSeries Arctis Nova Elite'}
