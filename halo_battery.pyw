@@ -1205,10 +1205,6 @@ class App:
 
         # all settings in one submenu, so the main menu keeps only the things used often
         preferences = Menu(
-            Item(tr("preferences.language"), Menu(*[
-                Item(details.name, pick_language(language), radio=True,
-                     checked=lambda it, language=language: self.cfg.get("language", "en") == language)
-                for language, details in i18n.LANGUAGES.items()])),
             # - / + in the menu; the classic menu shows them as a list to pick from
             flyout.CounterItem(tr("preferences.interval"), intervals, lambda: self.cfg["interval"], set_interval),
             flyout.CounterItem(tr("preferences.low"), lows, lambda: self.cfg["low"], set_low),
@@ -1246,6 +1242,10 @@ class App:
                  checked=lambda it: autostart_enabled()),
             Item(tr("preferences.updates"), toggle("update_check"),
                  checked=lambda it: self.cfg.get("update_check", True)),
+            Item(tr("preferences.language"), Menu(*[
+                Item(details.name, pick_language(language), radio=True,
+                     checked=lambda it, language=language: self.cfg.get("language", "en") == language)
+                for language, details in i18n.LANGUAGES.items()])),
         )
 
         return Menu(
