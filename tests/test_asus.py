@@ -145,6 +145,7 @@ class PollTest(ProviderTest):
         self.assertEqual([(r.name, r.level, r.charging) for r in res],
                          [("ASUS TX Gaming Mouse Mini Miku", 46, False)])
 
+
     def test_gladius_iii_aimpoint_issue_81(self):
         mouse = FakeMouse(level=87)
         res = self.poll(issue_81_entries(), {b"if0-ff01": mouse})
