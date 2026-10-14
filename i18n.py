@@ -9,7 +9,7 @@ import sys
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 
-from locales import en, fr, zh_CN, zh_TW, ja
+from locales import en, fr, ja, zh_CN, zh_TW
 
 DEFAULT_LANGUAGE = "en"
 
@@ -20,6 +20,7 @@ def one_other(count: int) -> str:
 
 
 def other_only(count: int) -> str:
+    """Plural rule for languages without singular/plural grammatical changes."""
     return "other"
 
 
@@ -49,14 +50,16 @@ class Language:
 # Static imports above and this single registry also drive menus and validation.
 LANGUAGES = {
     "en": Language("English", en.MESSAGES, windows_primary_ids=(0x09,)),
-    "zh-TW": Language("繁體中文", zh_TW.MESSAGES, plural_rule=other_only,
-                      plural_forms=("other",), windows_language_ids=(0x0404, 0x0C04, 0x1404, 0x7C04)),
-    "zh-CN": Language("简体中文", zh_CN.MESSAGES, plural_rule=other_only,
-                      plural_forms=("other",), windows_language_ids=(0x0804, 0x1004, 0x0004, 0x7804)),
-    "ja": Language("日本語", ja.MESSAGES, plural_rule=other_only,
-                   windows_primary_ids=(0x11,), plural_forms=("other",)),
     "fr": Language("Français", fr.MESSAGES, plural_rule=_french_plural,
                    windows_primary_ids=(0x0C,)),
+    "zh-TW": Language("繁體中文", zh_TW.MESSAGES, plural_rule=other_only,
+                      plural_forms=("other",),
+                      windows_language_ids=(0x0404, 0x0C04, 0x1404, 0x7C04)),
+    "zh-CN": Language("简体中文", zh_CN.MESSAGES, plural_rule=other_only,
+                      plural_forms=("other",),
+                      windows_language_ids=(0x0804, 0x1004, 0x0004, 0x7804)),
+    "ja": Language("日本語", ja.MESSAGES, plural_rule=other_only,
+                   windows_primary_ids=(0x11,), plural_forms=("other",)),
 }
 
 
@@ -64,7 +67,8 @@ def detect_language() -> str:
     """The current user's Windows UI language, not their regional format/keyboard.
 
     GetUserDefaultUILanguage returns a LANGID. Its primary-language bits cover
-    all regional variants of a registered language.
+    all regional variants of a registered language. Exact LANGIDs allow scripts
+    such as Traditional Chinese to be selected without matching Simplified Chinese.
     https://learn.microsoft.com/windows/win32/api/winnls/nf-winnls-getuserdefaultuilanguage
     """
     if sys.platform != "win32":

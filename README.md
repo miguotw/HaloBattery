@@ -38,13 +38,17 @@
 
 1. 安裝 [Python 3.10 以上版本](https://www.python.org/downloads/)，並勾選 **Add python.exe to PATH**。
 2. 將本儲存庫下載或複製至固定資料夾，例如 `C:\Tools\HaloBattery`。
-3. 執行 `install_and_run.bat`，再於系統匣圖示按右鍵，選擇「偏好設定 → 隨 Windows 啟動」。
+3. 執行 `scripts/install_and_run.bat`，再於系統匣圖示按右鍵，選擇「偏好設定 → 隨 Windows 啟動」。
 
-執行 `build_exe.bat` 可自行建置，輸出位於 `dist\HaloBattery`。發布流程由 `.github/workflows/release.yml` 管理：推送如 `v1.13.0.1` 的 tag 後，GitHub Actions 會建置程式並將 ZIP 附加至 Release。tag 必須符合 `version.py` 產生的版本，且 `CHANGELOG.md` 必須有對應的版本說明。
+執行 `scripts/build_exe.bat` 可自行建置，輸出位於 `dist\HaloBattery`。發布流程由 `.github/workflows/release.yml` 管理：推送如 `v1.13.0.1` 的 tag 後，GitHub Actions 會建置程式並將 ZIP 附加至 Release。tag 必須符合 `version.py` 產生的版本，且 `CHANGELOG.md` 必須有對應的版本說明。
 
 ### 可攜模式
 
 在 `HaloBattery.exe`（原始碼版為 `halo_battery.pyw`）旁建立空白 `portable.txt` 後重新啟動，即可將設定、紀錄、電量歷史、狀態檔及診斷報告放在程式資料夾。資料夾必須可寫入；否則退回 `%APPDATA%\HaloBattery` 並記錄原因。設定不會自動搬移，可自行複製原有 `config.json`。「隨 Windows 啟動」仍會使用目前使用者的登錄設定。
+
+## 1.15 更新
+
+新增「立即檢查更新」、更新後的「更新內容」視窗、「保留已斷線裝置直到重新啟動」偏好設定及 5% 低電量提醒門檻。支援裝置與修正詳見 [CHANGELOG](CHANGELOG.md)。
 
 ## 圖示說明
 
@@ -86,7 +90,7 @@
 - **裝置類型**：停用特定品牌或裝置系列；停用後程式不會開啟或查詢其裝置。
 - **圖示顏色**：可選「自動」（Windows 主題，或執行中的 MyDockFinder 選單列主題）、「白色」或「黑色」。
 - **隨 Windows 啟動**：透過目前使用者的登錄機碼設定，不需要系統管理員權限。
-- **檢查更新**：預設啟用，每天檢查本分支的 Releases 一次。有新版時會通知，並顯示「下載 vX.Y.Z.N…」。
+- **檢查更新**：預設啟用，每天檢查本分支的 Releases 一次。有新版時會通知，並顯示「更新至 vX.Y.Z.N…」。建置版在資料夾可寫入時會驗證下載套件、安裝更新並重新啟動；從原始碼執行或資料夾不可寫入時，會開啟本分支的發布頁。
 
 ### 其他操作
 
@@ -98,10 +102,10 @@
 
 1. 關閉 Synapse、WLmouse 網頁驅動程式與其他電量工具，它們可能占用接收器。
 2. 移動滑鼠，讓它離開休眠狀態。
-3. 執行 `probe.bat`，或在系統匣選單選擇「診斷報告…」。報告會列出所有 HID 裝置與原始協定回覆。請附在本儲存庫的 Issue 中，以協助加入新裝置支援。報告包含藍牙 MAC 位址與裝置序號，發布前可先遮蔽這些資訊。[CONTRIBUTING.md](CONTRIBUTING.md)（英文）說明需要附上哪些資料、如何擷取尚未支援裝置的 USB 通訊，以及如何提交 Pull Request。
+3. 執行 `scripts/probe.bat`，或在系統匣選單選擇「診斷報告…」。報告會列出所有 HID 裝置與原始協定回覆。請附在本儲存庫的 Issue 中，以協助加入新裝置支援。報告包含藍牙 MAC 位址與裝置序號，發布前可先遮蔽這些資訊。[CONTRIBUTING.md](.github/CONTRIBUTING.md)（英文）說明需要附上哪些資料、如何擷取尚未支援裝置的 USB 通訊，以及如何提交 Pull Request。
 4. 若出現 **「python312.dll was not found」**，或「隨 Windows 啟動」提示程式正從暫存資料夾執行，通常是直接從 ZIP 啟動，或只複製了 `HaloBattery.exe`。請將整個 ZIP 解壓縮至獨立資料夾，保留 EXE 旁的 `_internal` 資料夾，再從該位置啟動程式。
 
-設定、執行紀錄與診斷報告位於 `%APPDATA%HaloBattery`。
+設定、執行紀錄與診斷報告位於 `%APPDATA%\HaloBattery`。
 
 ## 同步上游
 
