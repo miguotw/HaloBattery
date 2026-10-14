@@ -1335,11 +1335,11 @@ class App:
                  checked=lambda it: autostart_enabled()),
             Item(tr("preferences.updates"), toggle("update_check"),
                  checked=lambda it: self.cfg.get("update_check", True)),
+            Item(tr("preferences.check_now"), lambda i, it: self.check_update_now()),
             Item(tr("preferences.language"), Menu(*[
                 Item(details.name, pick_language(language), radio=True,
                      checked=lambda it, language=language: self.cfg.get("language", "en") == language)
                 for language, details in i18n.LANGUAGES.items()])),
-            Item(tr("preferences.check_now"), lambda i, it: self.check_update_now()),
         )
 
         return Menu(
